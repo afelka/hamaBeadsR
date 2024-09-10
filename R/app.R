@@ -40,7 +40,8 @@ server <- function(input, output) {
   hama_colors <- data.frame(
     name = c("black", "white", "red", "blue", "yellow", "green", 'darkgreen', "brown", "cyan", "beige",
              "pink", "orchid", "orange", "purple", "lightblue", "lightgreen", "grey", "darkgrey", "darkred",
-             "azure", "plum", "gold","turquoise" , "ivory", "lightsteelblue")
+             "azure", "plum", "gold","turquoise" , "ivory", "lightsteelblue", "lavender", "darkolivegreen",
+             "mintcream","lightyellow","peachpuff", "mistyrose","ghostwhite", "sandybrown")
   )
 
   # hama color rgb
