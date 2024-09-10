@@ -13,6 +13,7 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       fileInput("upload", "Upload an image (png/jpg/jpeg)", accept = c('image/png', 'image/jpeg', 'image/jpg')),
+      selectInput("size", "Select Image Size", choices = c("29x29", "57x57"), selected = "29x29"),
       actionButton("process", "Generate Hama Bead Pattern"),
       downloadButton("download_plot", "Download Plot")
     ),
@@ -57,9 +58,13 @@ server <- function(input, output) {
   observeEvent(input$process, {
     req(input$upload)
 
-    # Read and resize the uploaded image to 29x29
+    # Get the selected size
+    selected_size <- input$size
+
+    # Read and resize the uploaded image based on the selected size
     img <- image_read(input$upload$datapath) %>%
-      image_resize("29x29!")
+      image_resize(paste0(selected_size,"!"))
+
 
     # Convert the image to an array
     img_array <- image_data(img)
@@ -79,15 +84,18 @@ server <- function(input, output) {
         ClosestColor = mapply(closest_color, R, G, B, MoreArgs = list(palette = hama_colors_rgb))
       )
 
+    # Set stroke size based on image size
+    stroke_size <- ifelse(selected_size == "57x57", 1, 3)
+
     # Render the plot
     output$hama_plot <- renderPlot({
       ggplot(img_df, aes(x = X, y = Y)) +
-        geom_point(shape = 21, size = 3, stroke = 3, color = img_df$ClosestColor) +  # Shape 21 for filled circles
+        geom_point(shape = 21, size = 3, stroke = stroke_size, color = img_df$ClosestColor) +  # Shape 21 for filled circles
         scale_y_reverse() +       # Flip the y-axis to match image orientation
         coord_fixed() +           # Keep aspect ratio fixed
         theme_void() +
         theme(legend.position = "none") +  # Remove the legend
-        ggtitle("29x29 with Closest Hama Colors")
+        ggtitle(paste(selected_size, "with Closest Hama Colors"))
     })
 
     # Download handler for the plot
@@ -97,7 +105,7 @@ server <- function(input, output) {
         # Remove the file extension from the uploaded file name
         base_name <- tools::file_path_sans_ext(basename(input$upload$name))
         # Append the current date and ".png" to create a unique filename
-        paste0(base_name, "_hama_bead_pattern_", Sys.Date(), ".png")
+        paste0(base_name, "_hama_bead_pattern_", Sys.Date(),"_",selected_size, ".png")
       },
       content = function(file) {
         ggsave(file, plot = last_plot(), width = 8, height = 8, units = "in", dpi = 300)
