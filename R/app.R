@@ -41,7 +41,7 @@ server <- function(input, output) {
     name = c("black", "white", "red", "blue", "yellow", "green", 'darkgreen', "brown", "cyan", "beige",
              "pink", "orchid", "orange", "purple", "lightblue", "lightgreen", "grey", "darkgrey", "darkred",
              "azure", "plum", "gold","turquoise" , "ivory", "lightsteelblue", "lavender", "darkolivegreen",
-             "mintcream","lightyellow","peachpuff", "mistyrose","ghostwhite", "sandybrown")
+             "mintcream","lightyellow","peachpuff", "mistyrose","ghostwhite")
   )
 
   # hama color rgb
