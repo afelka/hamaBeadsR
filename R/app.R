@@ -27,18 +27,24 @@ ui <- fluidPage(
 # Define server logic
 server <- function(input, output) {
 
+  # Get R G B values for all colors
+  all_colors_rgb <-  data.frame(name = colors()) %>% rowwise() %>%
+    mutate(
+      r = col2rgb(name)[1],
+      g = col2rgb(name)[2],
+      b = col2rgb(name)[3]
+    ) %>%
+    ungroup()
+
   # Define Hama Colors
   hama_colors <- data.frame(
     name = c("black", "white", "red", "blue", "yellow", "green", 'darkgreen', "brown", "cyan", "beige",
              "pink", "orchid", "orange", "purple", "lightblue", "lightgreen", "grey", "darkgrey", "darkred",
-             "azure", "plum", "gold","turquoise" , "ivory", "lightsteelblue"),
-    r = c(0, 255, 255, 0 , 255, 0, 0, 165, 0 , 245, 255, 218, 255, 160, 173, 144, 190 ,
-          169, 139, 240 , 221, 255, 64,255,  176),
-    g = c(0, 255, 0, 0 , 255, 255, 100, 42, 255 , 245, 192, 112, 165, 32, 216, 238,
-          190 , 169, 0, 255, 160 , 215, 224, 255 ,  196),
-    b = c(0, 255, 0, 255, 0, 0, 0, 42 , 255 ,220, 203, 214, 0, 240, 230 ,
-          144, 190 , 169, 0, 255, 221, 0, 208,240 , 222)
+             "azure", "plum", "gold","turquoise" , "ivory", "lightsteelblue")
   )
+
+  # hama color rgb
+  hama_colors_rgb <- all_colors_rgb %>% filter(name %in% hama_colors$name)
 
   # Function to find the closest Hama bead color
   closest_color <- function(r, g, b, palette) {
@@ -69,7 +75,7 @@ server <- function(input, output) {
         G = g_channel,
         B = b_channel,
         # Find closest Hama bead color for each pixel
-        ClosestColor = mapply(closest_color, R, G, B, MoreArgs = list(palette = hama_colors))
+        ClosestColor = mapply(closest_color, R, G, B, MoreArgs = list(palette = hama_colors_rgb))
       )
 
     # Render the plot
