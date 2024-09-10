@@ -8,5 +8,9 @@ Shiny app for converting images to Hama Beads Pattern
 ![](images/mcqueen.jfif) 
 <br><br>
 
-### Example Output
+### Example Output 29x29
 ![](images/mcqueen_hama_bead_pattern_2024-09-09.png)
+<br><br>
+
+### Example Output 57x57
+![](images/mcqueen_hama_bead_pattern_2024-09-10_57x57.png)
